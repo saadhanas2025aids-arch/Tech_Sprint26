@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Smart Library — SLMS Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  /* Login Page Styling */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg,#3b82f6,#0ea5e9);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+.login-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 40px 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.login-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  border-radius: 15px;
+  font-weight: 900;
+  color: white;
+  background: linear-gradient(45deg,#0ea5e9,#3b82f6,#f472b6,#facc15,#10b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  animation: bounceLogo 2s ease infinite alternate, rainbowBG 6s ease infinite;
+}
+
+@keyframes bounceLogo {
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+@keyframes rainbowBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+.login-card h2 {
+  margin-bottom: 20px;
+  color: #0ea5e9;
+}
+
+.login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input {
+  padding: 12px 10px;
+  border-radius: 12px;
+  border: 1px solid #cce4f6;
+  outline: none;
+  transition: 0.3s;
+}
+
+.input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59,130,246,0.4);
+}
+
+.login-btn {
+  background: linear-gradient(90deg,#0ea5e9,#3b82f6);
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: linear-gradient(90deg,#3b82f6,#0ea5e9);
+  transform: translateY(-2px) scale(1.02);
+}
+
+@keyframes fadeInUp{
+  0% {opacity:0; transform: translateY(20px);}
+  100% {opacity:1; transform: translateY(0);}
+}
+
+.muted {
+  font-size: 0.85rem;
+  margin-top: 8px;
+  color: #5b6b75;
+}
+
+:root{
+  --bg:#eaf9ff; --card:#fff; --accent1:#0ea5e9; --accent2:#3b82f6; 
+  --text:#042b4a; --muted:#5b6b75; --radius:14px; --danger:#ff4d4f; 
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background: linear-gradient(180deg,#f5fbff,#eaf9ff);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:white;
+}
+.brand{display:flex;gap:12px;align-items:center;font-weight:800}
+.logo{
+  width:46px;height:46px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;
+  background: linear-gradient(45deg, #0ea5e9, #3b82f6, #facc15, #f472b6, #10b981);
+  background-size: 400% 400%;
+  animation: bounceLogo 2s ease infinite alternate, rainbowBG 6s ease infinite;
+}
+@keyframes bounceLogo{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+@keyframes rainbowBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.nav{display:flex;gap:8px}
+.nav button{
+  background:transparent;
+  border:none;
+  color:white;
+  padding:8px 10px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.nav button.active, .nav button:hover{background:rgba(255,255,255,0.12)}
+.container{max-width:1200px;margin:20px auto;padding:18px}
+.panel{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:0 12px 40px rgba(2,6,23,0.06);
+  padding:16px;margin-bottom:14px;
+  transition:0.3s;
+}
+.panel:hover{box-shadow:0 15px 45px rgba(2,6,23,0.12);}
+.row{display:flex;gap:12px;align-items:center}
+.row.col{flex-direction:column;align-items:flex-start}
+.input{
+  position:relative;
+  padding:14px 10px 6px 10px;
+  border-radius:10px;
+  border:1px solid #e6f7ff;
+  background:#fbfeff;
+  width:100%;
+  transition:0.3s;
+}
+.input:focus{
+  border-color:var(--accent2);
+  outline:none;
+  box-shadow:0 0 8px rgba(14,165,233,0.4);
+}
+.input:focus::placeholder{color:transparent;}
+.btn{
+  padding:8px 12px;
+  border-radius:10px;
+  border:none;
+  background: linear-gradient(90deg,#0ea5e9,#3b82f6);
+  color:white;
+  cursor:pointer;
+  transition: all 0.4s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+}
+.btn:hover{
+  background: linear-gradient(90deg,#3b82f6,#0ea5e9);
+  transform: translateY(-2px) scale(1.03);
+}
+.btn:active{transform: scale(0.97);}
+.ghost{
+  background:transparent;
+  border:1px solid #3b82f6;
+  color:#3b82f6;
+  padding:8px 10px;
+  border-radius:10px;
+  transition: all 0.3s ease;
+}
+.ghost:hover{background:#3b82f6;color:white;}
+.small{padding:6px 8px;font-size:0.9rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}
+.card{
+  background: linear-gradient(180deg,#ffffff,#f0f9ff);
+  border-left: 5px solid #3b82f6;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #eef9ff;
+  transition: transform 0.3s, box-shadow 0.3s, border-left-color 0.3s;
+}
+.card:hover{
+  box-shadow:0 12px 25px rgba(0,0,0,0.12);
+  transform: translateY(-3px);
+  border-left-color:#0ea5e9;
+}
+.book{display:flex;gap:12px;align-items:flex-start}
+.cover{width:84px;height:120px;border-radius:8px;background:#f0fbff;background-size:cover;background-position:center;flex-shrink:0}
+.badge{display:inline-block;padding:6px 8px;border-radius:999px;background:linear-gradient(90deg,#d1fae5,#6ee7b7);color:#065f46;font-weight:600;margin-left:8px}
+.low{background: linear-gradient(90deg,#fee2e2,#fecaca);color:#b91c1c;border:1px solid #ffd6cc;padding:6px 8px;border-radius:8px;font-weight:700}
+.muted{color:var(--muted);font-size:0.95rem}
+.tag{display:inline-block;background: linear-gradient(90deg,#bfdbfe,#60a5fa);color:#0c4a6e;padding:6px 8px;border-radius:999px;margin-right:6px;font-size:0.85rem}
+.footer{padding:12px;text-align:center;color:var(--muted);font-size:13px}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.35);z-index:9999}
+.modal .box{background:white;padding:12px;border-radius:12px;max-width:720px;width:94%}
+.hidden{display:none}
+.toast{position:fixed;right:18px;bottom:18px;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,#c7f0ff,#7dd3fc);color:#013241;box-shadow:0 10px 30px rgba(2,6,23,0.06);}
+.seat-available{background: linear-gradient(90deg,#d4f4dd,#86efac);}
+.seat-occupied{background: linear-gradient(90deg,#ffd6cc,#fca5a5);}
+.seat-available:hover, .seat-occupied:hover{box-shadow:0 0 10px rgba(255,255,255,0.4);}
+@media(max-width:720px){ .row{flex-direction:column;align-items:stretch} .book{flex-direction:column;align-items:flex-start} }
+@keyframes fadeInUp{0% {opacity:0; transform: translateY(20px);}100% {opacity:1; transform: translateY(0);}}
+#recoArea .card, #activityArea .card{animation: fadeInUp 0.6s ease forwards;}
+</style>
+<style>
+/* --- GLOBAL RED-BLACK LUXURY THEME --- */
+
+/* Body & background */
+body, #app {
+  background: linear-gradient(180deg,#330000,#1a0a0a);
+  color: #fff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+/* Login Page */
+.login-container {
+  background: linear-gradient(135deg, #1a0a0a, #330000);
+}
+
+.login-card {
+  background: rgba(20,0,0,0.95);
+  box-shadow: 0 15px 40px rgba(255,0,0,0.3);
+}
+
+.login-logo {
+  background: linear-gradient(45deg,#ff1a1a,#cc0000,#990000,#660000,#ff4d4d);
+  color: #fff;
+  font-weight: 900;
+}
+
+.login-card h2 {
+  color: #ff4d4d;
+}
+
+.input {
+  border: 1px solid #660000;
+  background: #1a0a0a;
+  color: #fff;
+}
+
+.input:focus {
+  border-color: #ff1a1a;
+  box-shadow: 0 0 8px rgba(255,26,26,0.5);
+}
+
+.login-btn, .btn {
+  background: linear-gradient(90deg,#cc0000,#ff1a1a);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255,26,26,0.4);
+}
+
+.login-btn:hover, .btn:hover {
+  background: linear-gradient(90deg,#ff1a1a,#cc0000);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.ghost {
+  border: 1px solid #ff1a1a;
+  color: #ff1a1a;
+}
+
+.ghost:hover {
+  background: #cc0000;
+  color: #fff;
+}
+
+/* Header & Navigation */
+.header {
+  background: linear-gradient(90deg,#cc0000,#ff1a1a);
+  color: #fff;
+}
+
+.nav button {
+  color: #fff;
+}
+
+.nav button.active, .nav button:hover {
+  background: rgba(255,0,0,0.3);
+}
+
+/* Panels & Cards */
+.panel {
+  background: #220000;
+  color: #fff;
+}
+
+.card {
+  background: linear-gradient(180deg,#330000,#220000);
+  border-left: 5px solid #ff1a1a;
+  border: 1px solid #660000;
+  color: #fff;
+  transition: transform 0.3s, box-shadow 0.3s, border-left-color 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 12px 25px rgba(255,26,26,0.3);
+  transform: translateY(-3px);
+  border-left-color: #ff4d4d;
+}
+
+/* Tags & Low Stock */
+.tag {
+  background: linear-gradient(90deg,#660000,#ff1a1a);
+  color:#fff;
+}
+
+.low {
+  background: linear-gradient(90deg,#ffcccc,#ff6666);
+  color:#660000;
+  border:1px solid #ff9999;
+}
+
+/* Seats */
+.seat-available {
+  background: linear-gradient(90deg, #FFD700, #FFA500); /* golden/yellow gradient */
+  color: #1a0a0a; /* dark text so it’s readable */
+}
+
+.seat-occupied {
+  background: linear-gradient(90deg,#990000,#660000); /* deep red */
+  color: #fff;
+}
+
+.seat-available:hover, .seat-occupied:hover {
+  box-shadow: 0 0 10px rgba(255,215,0,0.5); /* golden glow for hover on available seats */
+}
+
+/* Footer */
+.footer {
+  background: #1a0a0a;
+  color: #ff6666;
+}
+
+/* Muted text */
+.muted {
+  color: #bbb;
+}
+
+/* Toast */
+.toast {
+  background: linear-gradient(90deg,#ff4d4d,#cc0000);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(255,0,0,0.3);
+}
+
+/* Modal */
+.modal .box {
+  background: #220000;
+  color: #fff;
+}
+
+/* Cover image placeholder for books */
+.cover {
+  background: #330000;
+  border: 1px solid #660000;
+}
+
+/* Inputs in all pages */
+.input {
+  background: #1a0a0a;
+  color: #fff;
+  border: 1px solid #660000;
+}
+
+.input:focus {
+  border-color: #ff1a1a;
+  box-shadow: 0 0 8px rgba(255,26,26,0.5);
+}
+
+/* Scrollbar luxury style (optional) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #660000;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff1a1a;
+}
+/* ===== BOOKS PAGE – CLEAN GRID ALIGNMENT ===== */
+#page-books .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.book {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.cover {
+  width: 90px;
+  height: 130px;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#1a1a1a,#2a2a2a);
+}
+
+.book h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.book-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.book-meta {
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.book-tags {
+  margin-top: 8px;
+}
+
+.book-tags .tag {
+  margin-bottom: 4px;
+  display: inline-block;
+}
+.low {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  position: relative;
+}
+
+.low::before,
+.low::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f472b6, transparent);
+  margin: 6px 0;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-container">
+  <div class="login-card">
+    <div class="login-logo">SL</div>
+    <h2>Welcome to Smart Library</h2>
+    <div class="login-fields">
+      <input id="loginEmail" class="input" type="email" placeholder="Email">
+      <input id="loginUser" class="input" type="text" placeholder="Username">
+      <select id="loginRole" class="input">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <input id="loginPassword" class="input" type="password" placeholder="Password">
+      <button class="btn login-btn" onclick="login()">Login</button>
+    </div>
+    <div id="loginMsg" class="muted"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+  <div class="header">
+    <div class="brand"><div class="logo">SL</div><div><div style="font-size:1.05rem">SMART LIBRARY — SLMS</div><div style="font-size:0.82rem;opacity:0.95">Welcome to library World</div></div></div>
+    <div class="nav" role="navigation" aria-label="main">
+      <button id="nav-dashboard" class="active" onclick="nav('dashboard')">Dashboard</button>
+      <button id="nav-books" onclick="nav('books')">Books</button>
+      <button id="nav-issue" onclick="nav('issue')">Issue/Return</button>
+      <button id="nav-seats" onclick="nav('seats')">Seats</button>
+      <button id="nav-admin" onclick="nav('admin')">Admin</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Dashboard -->
+    <section id="page-dashboard" class="panel">
+      <h1 style="color: #b91c1c;">Dashboard </h1>
+      
+      <div style="margin-top:12px" class="panel">
+        <h3>Recommended for you</h3>
+        <div id="recoArea" class="grid"></div>
+      </div>
+      <div style="margin-top:12px" class="panel">
+        <h3>Recent Activity</h3>
+        <div id="activityArea" class="muted" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- Books -->
+    <section id="page-books" class="panel hidden">
+      <h2>Books</h2>
+      <div id="booksGrid" class="grid" style="margin-top:12px"></div>
+    </section>
+
+    <!-- Issue/Return -->
+    <section id="page-issue" class="panel hidden">
+      <h2>Issue / Return</h2>
+      <div id="issuedGrid" class="grid" style="margin-top:12px"></div>
+    </section>
+
+    <!-- Seats -->
+    <section id="page-seats" class="panel hidden">
+      <h2>Seat Reservation</h2>
+      <div class="grid" id="seatGrid"></div>
+    </section>
+
+    <!-- Admin -->
+    <section id="page-admin" class="panel hidden">
+      <h2>Admin Panel</h2>
+      <div class="row" style="gap:12px;margin-bottom:12px;">
+        <select id="preBookSelect" class="input">
+          <option value="">Select Book to Add</option>
+          <option value="b_js">You Don't Know JS</option>
+          <option value="b_cc">Clean Code</option>
+          <option value="b_hs">HTML & CSS Handbook</option>
+          <option value="b_alg">Algorithms Unlocked</option>
+        </select>
+        <button class="btn" onclick="addSampleBook()">Add Selected Book</button>
+      </div>
+      <div id="adminBooks" class="grid" style="margin-top:12px"></div>
+    </section>
+  </div>
+
+  <footer class="footer">SLMS • Fine ₹5/day • Demo-ready</footer>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box"></div></div>
+<div id="qrModal" class="modal hidden"><div class="box" id="qrBox"></div></div>
+<div id="toast" class="toast hidden">Saved</div>
+
+<script>
+// === JS: Core functionality ===
+const FINE_PER_DAY=5;
+let booksData=[], issuedData=[], seatsData=[], currentUser=null;
+const PREDEFINED_BOOKS={
+  'b_js': {id:'b_js',title:'You Don\'t Know JS', author:'Kyle Simpson', isbn:'9781491904244', copies:2, available:2, tags:['javascript','programming'], rack:'A', shelf:'1'},
+  'b_cc': {id:'b_cc',title:'Clean Code', author:'Robert C. Martin', isbn:'9780132350884', copies:2, available:2, tags:['programming','software'], rack:'A', shelf:'2'},
+  'b_hs': {id:'b_hs',title:'HTML & CSS Handbook', author:'Jane Doe', isbn:'1111111111', copies:1, available:1, tags:['html','css'], rack:'B', shelf:'1'},
+  'b_alg': {id:'b_alg',title:'Algorithms Unlocked', author:'Thomas Cormen', isbn:'2222222222', copies:1, available:1, tags:['algorithms','programming'], rack:'B', shelf:'2'}
+};
+function el(id){return document.getElementById(id);}
+function showToast(msg,t=2000){const s=el('toast'); s.textContent=msg;s.classList.remove('hidden');setTimeout(()=>s.classList.add('hidden'),t);}
+function escapeHTML(str){if(!str) return ''; return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function ensureSeed(){
+  if(!localStorage.getItem('slms_books')) localStorage.setItem('slms_books', JSON.stringify(Object.values(PREDEFINED_BOOKS)));
+  if(!localStorage.getItem('slms_issued')){
+    const booksArr = JSON.parse(localStorage.getItem('slms_books')) || Object.values(PREDEFINED_BOOKS);
+    const firstBook = booksArr[0]; firstBook.available--;
+    const issuedDemo = [{bookId:firstBook.id, issuedOn:new Date().toISOString().slice(0,10), returned:false, days:0, fine:0}];
+    localStorage.setItem('slms_books', JSON.stringify(booksArr));
+    localStorage.setItem('slms_issued', JSON.stringify(issuedDemo));
+  }
+  if(!localStorage.getItem('slms_seats')) localStorage.setItem('slms_seats',JSON.stringify(Array.from({length:10},(_,i)=>({id:i+1,occupied:false,user:null}))));
+}
+
+// === LOGIN ===
+function login(){
+  const email=el('loginEmail').value.trim();
+  const username=el('loginUser').value.trim();
+  const role=el('loginRole').value;
+  const password=el('loginPassword').value.trim();
+  if(!email||!username||!password){el('loginMsg').textContent='Fill all fields';return;}
+  currentUser={email,username,role};
+  el('loginPage').classList.add('hidden'); el('app').classList.remove('hidden');
+  if(role!=='admin') el('nav-admin').style.display='none';
+  nav('dashboard'); showToast(`Welcome ${username} (${role})`);
+}
+
+// === NAVIGATION ===
+function nav(page){
+  ['dashboard','books','issue','seats','admin'].forEach(p=>el('page-'+p)?.classList.toggle('hidden', p!==page));
+  ['dashboard','books','issue','seats','admin'].forEach(p=>el('nav-'+p)?.classList.toggle('active', p===page));
+  if(page==='dashboard') loadReco();
+  if(page==='books') loadBooks();
+  if(page==='issue') loadIssued();
+  if(page==='seats') loadSeats();
+  if(page==='admin') loadAdmin();
+}
+
+// === SEATS (Per-user) ===
+function loadSeats(){
+  seatsData = JSON.parse(localStorage.getItem('slms_seats')) || [];
+  const grid = el('seatGrid'); grid.innerHTML='';
+
+  seatsData.forEach(s=>{
+    const div = document.createElement('div'); 
+    const isAdmin = currentUser.role === 'admin';
+    const reservedByCurrentUser = s.user === currentUser.email;
+
+    if(!s.occupied){
+      div.className='card seat-available';
+    } else if(reservedByCurrentUser){
+      div.className='card seat-available';
+    } else {
+      div.className='card seat-occupied';
+    }
+
+    const btn = document.createElement('button');
+    btn.className='btn small';
+
+    if(!s.occupied){
+      btn.textContent='Reserve';
+      btn.onclick = ()=>reserveSeat(s.id);
+    } else if(reservedByCurrentUser){
+      btn.textContent='Cancel';
+      btn.onclick = ()=>cancelSeat(s.id);
+    } else {
+      btn.textContent='Occupied';
+      btn.disabled = true;
+    }
+
+    div.innerHTML = `<h4>Seat ${s.id}</h4>
+                     <div class="muted">
+                       ${!s.occupied ? 'Available' : (reservedByCurrentUser ? 'Your Reservation' : 'Occupied')}
+                     </div>`;
+    div.appendChild(btn);
+    grid.appendChild(div);
+  });
+}
+
+function reserveSeat(id){
+  seatsData = JSON.parse(localStorage.getItem('slms_seats')) || [];
+  seatsData = seatsData.map(s=> s.id===id ? {...s, occupied:true, user:currentUser.email} : s);
+  localStorage.setItem('slms_seats', JSON.stringify(seatsData));
+  showToast(`Seat ${id} Reserved`);
+  loadSeats();
+}
+
+function cancelSeat(id){
+  seatsData = JSON.parse(localStorage.getItem('slms_seats')) || [];
+  seatsData = seatsData.map(s=> s.id===id && s.user===currentUser.email ? {...s, occupied:false, user:null} : s);
+  localStorage.setItem('slms_seats', JSON.stringify(seatsData));
+  showToast(`Seat ${id} Reservation Cancelled`);
+  loadSeats();
+}
+// === BOOKS, ISSUE/RETURN, ADMIN remain same ===
+// (Same code as before for loadBooks, issueBook, returnBook, loadIssued, loadAdmin, addSampleBook, deleteBook, renameBook, loadReco)
+// --- BOOKS ---
+function loadBooks(){
+  booksData = JSON.parse(localStorage.getItem('slms_books')) || [];
+  const grid = el('booksGrid');
+  grid.innerHTML = '';
+
+  booksData.forEach(b => {
+    const lowBadge = (b.available <= 1)
+      ? '<span class="low">LOW STOCK</span>'
+      : '';
+
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    div.innerHTML = `
+      <div class="book">
+        <div class="cover"></div>
+
+        <div>
+          <h3>${escapeHTML(b.title)} ${lowBadge}</h3>
+
+          <div class="muted book-meta">
+            ${escapeHTML(b.author)} • ISBN: ${escapeHTML(b.isbn || '—')}
+          </div>
+
+          <div class="book-tags">
+            ${(b.tags || []).map(t =>
+              `<span class="tag">${escapeHTML(t)}</span>`
+            ).join('')}
+          </div>
+
+          <div class="muted book-meta">
+            Rack: ${escapeHTML(b.rack || '—')} | Shelf: ${escapeHTML(b.shelf || '—')}
+          </div>
+
+          <div class="book-actions">
+            <button class="btn small" onclick="issueBook('${b.id}')">
+              Issue
+            </button>
+            <div class="muted">
+              ${b.available || 0} / ${b.copies || 0} available
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(div);
+  });
+}
+
+// --- ADMIN ---
+function loadAdmin(){
+  const grid=el('adminBooks'); grid.innerHTML=''; booksData=JSON.parse(localStorage.getItem('slms_books'));
+  booksData.forEach(b=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`<h4>${escapeHTML(b.title)}</h4>
+      <button class="btn small" onclick="deleteBook('${b.id}')">Delete</button>
+      <select onchange="renameBook('${b.id}',this.value)">
+        <option value="">Rename</option>
+        ${Object.values(PREDEFINED_BOOKS).map(pb=>`<option value="${pb.title}">${pb.title}</option>`).join('')}
+      </select>`;
+    grid.appendChild(div);
+  });
+}
+
+function addSampleBook(){
+  const selectedId = el('preBookSelect').value;
+  const book = PREDEFINED_BOOKS[selectedId];
+  if(!book){ showToast('Select a valid book'); return; }
+  const newBook = {...book, id:'b_'+Math.random().toString(36).slice(2,8), available: book.copies};
+  booksData.push(newBook);
+  localStorage.setItem('slms_books', JSON.stringify(booksData));
+  loadBooks(); loadAdmin();
+}
+
+function deleteBook(id){
+  booksData=booksData.filter(b=>b.id!==id);
+  localStorage.setItem('slms_books',JSON.stringify(booksData));
+  loadBooks(); loadAdmin();
+}
+
+function renameBook(id,newTitle){
+  if(!newTitle) return;
+  booksData=booksData.map(b=>b.id===id?{...b,title:newTitle}:b);
+  localStorage.setItem('slms_books',JSON.stringify(booksData));
+  loadBooks(); loadAdmin();
+}
+
+// --- ISSUE/RETURN ---
+function loadIssued(){
+  issuedData=JSON.parse(localStorage.getItem('slms_issued'));
+  booksData=JSON.parse(localStorage.getItem('slms_books'));
+  const grid=el('issuedGrid'); grid.innerHTML='';
+  issuedData.forEach(i=>{
+    const book=booksData.find(b=>b.id===i.bookId);
+    if(!book) return;
+    const days=(i.returned)?i.days: Math.max(0,Math.floor((new Date()-new Date(i.issuedOn))/(1000*60*60*24)));
+    const fine=(i.returned)?i.fine:days*FINE_PER_DAY;
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`
+      <h4>${escapeHTML(book.title)}</h4>
+      <div class="muted">Issued On: ${i.issuedOn} | Days: ${days} | Fine: ₹${fine}</div>
+      ${!i.returned?`<button class="btn small" onclick="returnBook('${i.bookId}')">Return</button>`:''}`;
+    grid.appendChild(div);
+  });
+}
+
+function issueBook(bookId){
+  booksData=JSON.parse(localStorage.getItem('slms_books'));
+  const book=booksData.find(b=>b.id===bookId);
+  if(!book || book.available<=0){showToast('No copies available'); return;}
+  book.available--;
+  let issued=JSON.parse(localStorage.getItem('slms_issued')) || [];
+  issued.push({bookId, issuedOn:new Date().toISOString().slice(0,10), returned:false, days:0, fine:0});
+  localStorage.setItem('slms_issued',JSON.stringify(issued));
+  localStorage.setItem('slms_books',JSON.stringify(booksData));
+  showToast('Book Issued'); loadBooks(); loadIssued();
+}
+
+function returnBook(bookId){
+  booksData=JSON.parse(localStorage.getItem('slms_books'));
+  let issued=JSON.parse(localStorage.getItem('slms_issued'));
+  const record=issued.find(i=>i.bookId===bookId && !i.returned);
+  if(!record) return;
+  const days=Math.max(0,Math.floor((new Date()-new Date(record.issuedOn))/(1000*60*60*24)));
+  record.returned=true; record.days=days; record.fine=days*FINE_PER_DAY;
+  booksData=booksData.map(b=>b.id===bookId?{...b,available:b.available+1}:b);
+  localStorage.setItem('slms_issued',JSON.stringify(issued));
+  localStorage.setItem('slms_books',JSON.stringify(booksData));
+  showToast('Book Returned'); loadBooks(); loadIssued();
+}
+
+// --- RECOMMENDATIONS ---
+function loadReco(){
+  booksData=JSON.parse(localStorage.getItem('slms_books'));
+  const grid=el('recoArea'); grid.innerHTML='';
+  booksData.slice(0,6).forEach(b=>{
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`<h4>${escapeHTML(b.title)}</h4><div class="muted">${escapeHTML(b.author)}</div>`;
+    grid.appendChild(div);
+  });
+}
+// Animate dashboard background slowly
+const dashboard = el('page-dashboard');
+let gradPos = 0;
+setInterval(()=>{
+  gradPos += 1;
+  dashboard.style.background = `linear-gradient(${gradPos}deg,#f0f9ff,#e0f7fa,#dbeafe,#fff5f3)`;
+}, 100);
+
+
+ensureSeed();
+</script>
+</body>
+</html>
